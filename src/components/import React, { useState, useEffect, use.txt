@@ -1,0 +1,540 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, Menu, X, Mail, Phone, MapPin, Download, Github, Linkedin, Twitter, Sun, Moon, Palette } from 'lucide-react';
+
+const Portfolio = () => {
+  const [currentProject, setCurrentProject] = useState(0);
+  const [theme, setTheme] = useState('light');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const particlesRef = useRef([]);
+
+  // Sample projects data
+  const projects = [
+    {
+      id: 1,
+      title: "E-Commerce Platform",
+      description: "Full-stack e-commerce solution with React, Node.js, and MongoDB",
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
+      tech: ["React", "Node.js", "MongoDB", "Stripe"],
+      github: "#",
+      demo: "#"
+    },
+    {
+      id: 2,
+      title: "Task Management App",
+      description: "Collaborative task management tool with real-time updates",
+      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop",
+      tech: ["React", "Firebase", "Material-UI"],
+      github: "#",
+      demo: "#"
+    },
+    {
+      id: 3,
+      title: "Weather Dashboard",
+      description: "Interactive weather application with geolocation and forecasts",
+      image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=500&h=300&fit=crop",
+      tech: ["React", "OpenWeather API", "Chart.js"],
+      github: "#",
+      demo: "#"
+    },
+    {
+      id: 4,
+      title: "Social Media App",
+      description: "Modern social platform with real-time messaging and media sharing",
+      image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
+      tech: ["React", "Socket.io", "Express", "PostgreSQL"],
+      github: "#",
+      demo: "#"
+    }
+  ];
+
+  // Auto-slide functionality with slower transition
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentProject((prev) => (prev + 1) % projects.length);
+    }, 4000); // Increased from 3000ms to 4000ms for smoother experience
+    return () => clearInterval(interval);
+  }, [projects.length]);
+
+  // Animated background particles
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const createParticles = () => {
+      particlesRef.current = [];
+      const particleCount = theme === 'blossom' ? 15 : theme === 'snow' ? 20 : 0; // Reduced particle count
+      
+      for (let i = 0; i < particleCount; i++) {
+        particlesRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * (theme === 'snow' ? 3 : 4) + 1, // Smaller particles
+          speedX: (Math.random() - 0.5) * 0.5, // Much slower horizontal movement
+          speedY: Math.random() * 0.8 + 0.2, // Much slower vertical movement
+          opacity: Math.random() * 0.6 + 0.3,
+          color: theme === 'blossom' ? 
+            `hsl(${Math.random() * 60 + 300}, 60%, 75%)` : 
+            '#ffffff',
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 1 // Slow rotation for blossoms
+        });
+      }
+    };
+
+  const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particlesRef.current.forEach((particle, index) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.rotation += particle.rotationSpeed;
+        
+        // Reset particle when it goes off screen
+        if (particle.y > canvas.height + 10) {
+          particle.y = -20;
+          particle.x = Math.random() * canvas.width;
+        }
+        
+        if (particle.x > canvas.width + 10) {
+          particle.x = -10;
+        } else if (particle.x < -10) {
+          particle.x = canvas.width + 10;
+        }
+        
+        ctx.save();
+        ctx.globalAlpha = particle.opacity;
+        ctx.fillStyle = particle.color;
+        ctx.translate(particle.x, particle.y);
+        ctx.rotate(particle.rotation * Math.PI / 180);
+        
+        if (theme === 'blossom') {
+          // Draw blossom shape
+          ctx.beginPath();
+          for (let i = 0; i < 5; i++) {
+            const angle = (i * 72) * Math.PI / 180;
+            const x = Math.cos(angle) * particle.size;
+            const y = Math.sin(angle) * particle.size;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          // Draw snowflake
+          ctx.beginPath();
+          ctx.arc(0, 0, particle.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        ctx.restore();
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    createParticles();
+    animate();
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createParticles();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [theme]);
+
+  const nextProject = () => {
+    setCurrentProject((prev) => (prev + 1) % projects.length);
+  };
+
+  const prevProject = () => {
+    setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
+  };
+
+  const themeClasses = {
+    light: 'bg-gradient-to-br from-gray-50 to-blue-50 text-gray-900',
+    blossom: 'bg-gradient-to-br from-pink-100 via-purple-100 to-indigo-100 text-gray-800',
+    snow: 'bg-gradient-to-br from-indigo-950 via-purple-950 to-black text-white'
+  };
+
+  return (
+    <div className={`min-h-screen transition-all duration-700 ${themeClasses[theme]} relative overflow-hidden`}>
+      {/* Animated Background Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{ background: 'transparent' }}
+      />
+      
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-opacity-80 border-b border-opacity-20 border-white transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                AwesomeDev
+              </div>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#home" className="hover:text-purple-400 transition-colors duration-200">Home</a>
+              <a href="#about" className="hover:text-purple-400 transition-colors duration-200">About</a>
+              <a href="#projects" className="hover:text-purple-400 transition-colors duration-200">Projects</a>
+              <a href="#contact" className="hover:text-purple-400 transition-colors duration-200">Contact</a>
+              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                <Download className="inline w-4 h-4 mr-2" />
+                Resume
+              </button>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setTheme(theme === 'light' ? 'blossom' : theme === 'blossom' ? 'snow' : 'light')}
+                className="p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
+              >
+                {theme === 'light' ? <Sun className="w-5 h-5" /> : 
+                 theme === 'blossom' ? <Palette className="w-5 h-5" /> : 
+                 <Moon className="w-5 h-5" />}
+              </button>
+              
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className={`md:hidden absolute top-16 left-0 right-0 backdrop-blur-md bg-opacity-95 border-b border-opacity-20 border-white transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+          <div className="px-4 py-4 space-y-2">
+            <a href="#home" className="block py-2 hover:text-purple-400 transition-colors duration-200">Home</a>
+            <a href="#about" className="block py-2 hover:text-purple-400 transition-colors duration-200">About</a>
+            <a href="#projects" className="block py-2 hover:text-purple-400 transition-colors duration-200">Projects</a>
+            <a href="#contact" className="block py-2 hover:text-purple-400 transition-colors duration-200">Contact</a>
+            <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+              <Download className="inline w-4 h-4 mr-2" />
+              Resume
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" className="relative z-10 pt-24 pb-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center justify-between">
+            <div className="lg:w-1/2 mb-10 lg:mb-0">
+              <div className="relative">
+                <img
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
+                  alt="Developer Profile"
+                  className="w-80 h-80 rounded-full object-cover shadow-2xl border-4 border-purple-400 animate-pulse"
+                />
+                <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-bounce"></div>
+              </div>
+            </div>
+            
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 animate-fade-in">
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+                  Full Stack
+                </span>
+                <br />
+                <span className="text-4xl lg:text-5xl">Developer</span>
+              </h1>
+              
+              <p className="text-xl mb-8 opacity-90 leading-relaxed">
+                Crafting digital experiences with cutting-edge technologies. 
+                Passionate about creating scalable solutions that make a difference.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 transform hover:scale-105 transition-transform duration-200">
+                  <h3 className="font-semibold text-purple-300">3+ Years</h3>
+                  <p className="text-sm opacity-80">Experience</p>
+                </div>
+                <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 transform hover:scale-105 transition-transform duration-200">
+                  <h3 className="font-semibold text-purple-300">50+ Projects</h3>
+                  <p className="text-sm opacity-80">Completed</p>
+                </div>
+                <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 transform hover:scale-105 transition-transform duration-200">
+                  <h3 className="font-semibold text-purple-300">React & Node.js</h3>
+                  <p className="text-sm opacity-80">Specialist</p>
+                </div>
+                <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 transform hover:scale-105 transition-transform duration-200">
+                  <h3 className="font-semibold text-purple-300">24/7 Support</h3>
+                  <p className="text-sm opacity-80">Available</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105">
+                  Get In Touch
+                </button>
+                <button className="border-2 border-purple-400 px-8 py-3 rounded-full hover:bg-purple-400 hover:text-white transition-all duration-200 transform hover:scale-105">
+                  View Work
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="relative z-10 py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Featured Projects
+            </h2>
+            <p className="text-xl opacity-80 max-w-3xl mx-auto">
+              Explore my latest work showcasing modern web development practices and innovative solutions
+            </p>
+          </div>
+          
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl">
+              <div 
+                className="flex transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${currentProject * 100}%)` }}
+              >
+                {projects.map((project, index) => (
+                  <div key={project.id} className="w-full flex-shrink-0 px-4">
+                    <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8 transform hover:scale-105 transition-all duration-300">
+                      <div className="flex flex-col lg:flex-row items-center">
+                        <div className="lg:w-1/2 mb-6 lg:mb-0">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-64 object-cover rounded-lg shadow-xl transition-transform duration-300 hover:scale-105"
+                          />
+                        </div>
+                        <div className="lg:w-1/2 lg:pl-8">
+                          <h3 className="text-3xl font-bold mb-4 text-purple-300">{project.title}</h3>
+                          <p className="text-lg mb-6 opacity-90">{project.description}</p>
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {project.tech.map((tech, techIndex) => (
+                              <span 
+                                key={techIndex}
+                                className="bg-purple-500 bg-opacity-20 px-3 py-1 rounded-full text-sm"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="flex gap-4">
+                            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200">
+                              <Github className="inline w-4 h-4 mr-2" />
+                              Code
+                            </button>
+                            <button className="border-2 border-purple-400 px-6 py-2 rounded-lg hover:bg-purple-400 hover:text-white transition-all duration-200">
+                              Live Demo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Navigation Buttons */}
+            <button 
+              onClick={prevProject}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 backdrop-blur-md p-3 rounded-full hover:bg-opacity-30 transition-all duration-200"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button 
+              onClick={nextProject}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 backdrop-blur-md p-3 rounded-full hover:bg-opacity-30 transition-all duration-200"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+            
+            {/* Dot Indicators */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {projects.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentProject(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    index === currentProject ? 'bg-purple-400' : 'bg-white bg-opacity-30'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="relative z-10 py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              About Me
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-4 text-purple-300">My Story</h3>
+              <p className="text-lg opacity-90 leading-relaxed mb-6">
+                I'm a passionate full-stack developer with over 3 years of experience creating 
+                digital solutions that combine beautiful design with powerful functionality. 
+                My journey started with a curiosity about how things work, and it has evolved 
+                into a career dedicated to building innovative web applications.
+              </p>
+              <p className="text-lg opacity-90 leading-relaxed">
+                I specialize in React.js, Node.js, and modern web technologies, always staying 
+                up-to-date with the latest trends and best practices in the industry.
+              </p>
+            </div>
+            
+            <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-4 text-purple-300">Skills & Expertise</h3>
+              <div className="space-y-4">
+                {[
+                  { skill: 'React.js & Next.js', level: 95 },
+                  { skill: 'Node.js & Express', level: 90 },
+                  { skill: 'JavaScript & TypeScript', level: 92 },
+                  { skill: 'Database Design', level: 88 },
+                  { skill: 'UI/UX Design', level: 85 }
+                ].map((item, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">{item.skill}</span>
+                      <span className="text-sm">{item.level}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 bg-opacity-20 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-purple-400 to-pink-400 h-2 rounded-full transition-all duration-1000"
+                        style={{ width: `${item.level}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="relative z-10 py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Get In Touch
+            </h2>
+            <p className="text-xl opacity-80 max-w-3xl mx-auto">
+              Ready to bring your ideas to life? Let's collaborate on your next project
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-6 text-purple-300">Let's Connect</h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <Mail className="w-6 h-6 text-purple-400" />
+                  <span>hello@awesomedev.com</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Phone className="w-6 h-6 text-purple-400" />
+                  <span>+1 (555) 123-4567</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <MapPin className="w-6 h-6 text-purple-400" />
+                  <span>San Francisco, CA</span>
+                </div>
+              </div>
+              
+              <div className="flex space-x-4 mt-8">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+                  <Github className="w-6 h-6" />
+                </button>
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+                  <Linkedin className="w-6 h-6" />
+                </button>
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+                  <Twitter className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-8">
+              <form className="space-y-6">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  />
+                </div>
+                <div>
+                  <textarea
+                    placeholder="Your Message"
+                    rows={5}
+                    className="w-full bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105"
+                >
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 py-12 px-4 border-t border-opacity-20 border-white">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            AwesomeDev
+          </div>
+          <p className="opacity-80 mb-4">
+            Crafting digital experiences with passion and precision
+          </p>
+          <p className="opacity-60 text-sm">
+            © 2024 AwesomeDev. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Portfolio;
