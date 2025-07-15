@@ -41,21 +41,21 @@ const App = () => {
     // ... (projects data remains unchanged)
     {
       id: 1,
-      title: "E-Commerce Platform",
-      description: "Full-stack e-commerce solution with React, Node.js, and MongoDB",
+      title: "Food Ordering App",
+      description: "MERN-stack Food ordering System with React, Node.js, and MongoDB",
       image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
       tech: ["React", "Node.js", "MongoDB", "Stripe"],
       github: "#",
-      demo: "#"
+      demo: "https://movieticketsbooking.netlify.app/"
     },
     {
       id: 2,
-      title: "Task Management App",
+      title: "Notes App",
       description: "Collaborative task management tool with real-time updates",
       image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop",
       tech: ["React", "Firebase", "Material-UI"],
       github: "#",
-      demo: "#"
+      demo: "https://makeyoursnote.netlify.app/"
     },
     {
       id: 3,
@@ -64,16 +64,16 @@ const App = () => {
       image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=500&h=300&fit=crop",
       tech: ["React", "OpenWeather API", "Chart.js"],
       github: "#",
-      demo: "#"
+      demo: ""
     },
     {
       id: 4,
-      title: "Social Media App",
-      description: "Modern social platform with real-time messaging and media sharing",
+      title: "MovieBooking App",
+      description: "Movies Booking platform with real-time review and ratings",
       image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
       tech: ["React", "Socket.io", "Express", "PostgreSQL"],
       github: "#",
-      demo: "#"
+      demo: "https://movieticketsbooking.netlify.app/"
     }
   ];
 

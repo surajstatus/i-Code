@@ -34,13 +34,19 @@ const ContactSection = () => {
             </div>
 
             <div className="flex space-x-4 mt-8">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+              <button
+                onClick={() => window.open("https://github.com/surajstatus/", "_blank")}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
                 <Github className="w-6 h-6" />
               </button>
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+              <button
+                onClick={() => window.open("https://www.linkedin.com/in/surajstatus/", "_blank")}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
                 <Linkedin className="w-6 h-6" />
               </button>
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
+              <button
+                onClick={() => window.open("https://www.instagram.com/surajstatus_/", "_blank")}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition-all">
                 <Instagram className="w-6 h-6" />
               </button>
             </div>

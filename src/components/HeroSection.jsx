@@ -48,7 +48,7 @@ const HeroSection = ({ scrollToSection }) => {
             <h1 className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Hi, I'm Suraj
             </h1>
-            <h2 className="text-2xl lg:text-3xl text-gray-300">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-400">
               Full Stack Developer
             </h2>
             <p className="text-lg text-gray-400 leading-relaxed">

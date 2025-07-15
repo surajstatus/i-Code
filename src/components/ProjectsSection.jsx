@@ -1,5 +1,6 @@
 // ProjectsSection.js
 import React, { useState, useEffect, useRef } from 'react';
+import ToastMessage from '../components/ToastMessage';
 import { Github, ChevronLeft, ChevronRight, ExternalLink, Sparkles, Zap, Star, Eye } from 'lucide-react';
 
 const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProject, prevProject }) => {
@@ -13,53 +14,15 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
   const [dragOffset, setDragOffset] = useState(0);
   const containerRef = useRef(null);
 
-  const mockProjects = projects || [
-    {
-      id: 1,
-      title: "AI-Powered Dashboard",
-      description: "Revolutionary analytics platform with real-time AI insights and predictive modeling capabilities that transform raw data into actionable intelligence.",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-      tech: ["React", "Node.js", "Python", "TensorFlow", "AWS"],
-      github: "#",
-      demo: "#"
-    },
-    {
-      id: 2,
-      title: "3D Interactive Portfolio",
-      description: "Immersive 3D web experience showcasing creative projects with WebGL animations and interactive particle systems.",
-      image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&h=600&fit=crop",
-      tech: ["Three.js", "React", "GSAP", "WebGL", "Blender"],
-      github: "#",
-      demo: "#"
-    },
-    {
-      id: 3,
-      title: "Neural Network Visualizer",
-      description: "Educational tool for visualizing neural networks in real-time with interactive training sessions and dynamic architecture modifications.",
-      image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&h=600&fit=crop",
-      tech: ["D3.js", "Python", "PyTorch", "React", "FastAPI"],
-      github: "#",
-      demo: "#"
-    },
-    {
-      id: 4,
-      title: "Blockchain Explorer",
-      description: "Advanced blockchain analytics platform with real-time transaction tracking and smart contract analysis capabilities.",
-      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop",
-      tech: ["React", "Web3.js", "Solidity", "Node.js", "MongoDB"],
-      github: "#",
-      demo: "#"
-    },
-    {
-      id: 5,
-      title: "VR Social Platform",
-      description: "Next-generation social platform with virtual reality integration and real-time 3D avatar interactions.",
-      image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc696?w=800&h=600&fit=crop",
-      tech: ["Unity", "C#", "WebXR", "React", "Socket.io"],
-      github: "#",
-      demo: "#"
-    }
-  ];
+  const [toastVisible, setToastVisible] = useState(false);
+
+  // Call this when demo is missing
+  const showToast = () => {
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 3000);
+  };
+
+  const mockProjects = projects || [];
 
   // const displayProjects = mockProjects;
 
@@ -135,19 +98,7 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
     if (nextProject) nextProject();
   };
 
-  // const getCardTransform = (index) => {
-  //   const diff = index - activeIndex;
-  //   const absDistance = Math.abs(diff);
-  //   if (absDistance > 2 && absDistance < displayProjects.length - 2) return null;
-  //   const direction = diff > 0 ? 1 : -1;
-  //   if (absDistance === 0) {
-  //     return { translateX: dragOffset, scale: 1, zIndex: 10, opacity: 1, rotateY: dragOffset * 0.1, blur: 0 };
-  //   } else if (absDistance === 1 || absDistance === displayProjects.length - 1) {
-  //     return { translateX: direction * 300 + dragOffset * 0.3, scale: 0.85, zIndex: 5, opacity: 0.7, rotateY: direction * 25 + dragOffset * 0.05, blur: 2 };
-  //   } else {
-  //     return { translateX: direction * 450 + dragOffset * 0.1, scale: 0.7, zIndex: 2, opacity: 0.4, rotateY: direction * 45 + dragOffset * 0.02, blur: 4 };
-  //   }
-  // };
+
 
   const getCardTransform = (index) => {
     const total = displayProjects.length;
@@ -168,9 +119,9 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
         translateX: direction * 300 + dragOffset * 0.3,
         scale: 0.85,
         zIndex: 5,
-        opacity: 0.7,
+        opacity: 50,
         rotateY: direction * 25 + dragOffset * 0.05,
-        blur: 2
+        blur: 3
       };
     } else {
       return {
@@ -310,11 +261,11 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
 
                     {/* Project Info */}
                     <div className="p-4 md:p-6 space-y-3 md:space-y-4">
-                      <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent line-clamp-2">
+                      <h3 className="text-xl md:text-2xl font-bold max-w-3xl mx-auto px-4 ">
                         {project.title}
                       </h3>
 
-                      <p className="text-sm md:text-base opacity-80 line-clamp-3">
+                      <p className="text-sm md:text-base opacity-80 max-w-3xl mx-auto px-4">
                         {project.description}
                       </p>
 
@@ -342,12 +293,22 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
                             <Github className="inline w-4 h-4 mr-1" />
                             Code
                           </button>
-                          <button className="flex-1 border border-purple-400 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-400 hover:text-white transition-all duration-200">
+                          <button
+                            onClick={() => {
+                              if (project.demo && project.demo.trim() !== '') {
+                                window.open(project.demo, '_blank', 'noopener,noreferrer');
+                              } else {
+                                showToast();
+                              }
+                            }}
+                            className="flex-1 border border-purple-400 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-400 hover:text-white transition-all duration-200">
                             <ExternalLink className="inline w-4 h-4 mr-1" />
                             Demo
                           </button>
                         </div>
                       )}
+
+
                     </div>
 
                     {/* Card Accents */}
@@ -357,6 +318,9 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
                 </div>
               );
             })}
+
+            <ToastMessage message="🚫 Demo not available for this project." show={toastVisible} />
+
           </div>
 
           {/* Navigation Buttons - Hidden on Mobile */}
@@ -376,7 +340,7 @@ const ProjectsSection = ({ projects, currentProject, setCurrentProject, nextProj
         </div>
 
         {/* Dot Indicators */}
-        <div className="flex justify-center mt-8 space-x-3">
+        <div className="flex justify-center mt-[-20px] space-x-3">
           {displayProjects.map((_, index) => (
             <button
               key={index}
