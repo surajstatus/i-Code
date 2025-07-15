@@ -31,7 +31,7 @@ const HeroSection = ({ scrollToSection }) => {
             <img
               src={heroimg}
               alt="Profile"
-              className="relative w-full max-w-md mx-auto transform"
+              className="relative w-full max-w-md mx-auto transform z-15"
             />
           </div>
         </motion.div>

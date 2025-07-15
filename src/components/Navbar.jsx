@@ -1,23 +1,18 @@
 // Navbar.js
 import React from 'react';
-import { ChevronLeft, ChevronRight, Menu, X, Download, Sun, Moon, Palette } from 'lucide-react';
+import AnimatedGlowText from './AnimatedGlowText'; // At the top of Navbar.js
+import { ChevronLeft, ChevronRight, Menu, X, Download, Moon, Palette } from 'lucide-react';
 
 const Navbar = ({ theme, setTheme, mobileMenuOpen, setMobileMenuOpen }) => {
   return (
-    <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-opacity-80 border-b border-opacity-20 border-white transition-all duration-300">
+    <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-opacity-80 border-b border-opacity-5 border-white transition-all duration-300">
       {/* Navigation content */}
       {/* Theme Toggle and Mobile Menu Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <div
-              className={`text-4xl font-bold font-stalinist bg-clip-text text-transparent transition-all duration-500
-    ${theme === 'blossom'
-                  ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-yellow-300'
-                  : 'bg-gradient-to-r from-blue-400 via-cyan-400 to-white'
-                }`}
-            >
-              i-Code
+            <div className="flex items-center absolute mt-10 font-stalinist">
+              <AnimatedGlowText theme={theme} />
             </div>
 
           </div>
@@ -32,27 +27,29 @@ const Navbar = ({ theme, setTheme, mobileMenuOpen, setMobileMenuOpen }) => {
               <Download className="inline w-4 h-4 mr-2" />
               Resume
             </button>
+
+
+            {/* Theme Toggle */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setTheme(theme === 'snow' ? 'blossom' : 'snow')}
+                className="p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
+              >
+                {
+                  theme === 'blossom' ? <Palette className="w-5 h-5" /> :
+                    <Moon className="w-5 h-5" />}
+              </button>
+
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
-          {/* Theme Toggle */}
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setTheme(theme === 'snow' ? 'blossom' : 'snow')}
-              className="p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
-            >
-              {
-                theme === 'blossom' ? <Palette className="w-5 h-5" /> :
-                  <Moon className="w-5 h-5" />}
-            </button>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-opacity-20 hover:bg-white transition-all duration-200"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
         </div>
       </div>
 

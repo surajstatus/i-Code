@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Lottie from 'lottie-react';
-import animationData from '../assets/Hexagon.json';
+// import animationData from '../assets/Hexagon.json';
+import animationData from '../assets/Hexapy.json'
 
 const ParticleCanvas = ({ theme }) => {
   const canvasRef = useRef(null);
@@ -114,7 +115,7 @@ const ParticleCanvas = ({ theme }) => {
           animationData={animationData}
           loop
           autoplay
-          style={{ width: '100%', height: '100%', opacity: 0.2, filter: 'blur(4px)', gradient: 'linear-gradient(to bottom, rgba(228, 13, 13, 0.1), rgb(195, 255, 0))' }}
+          style={{ width: '100%', height: '100%', opacity: 0.3, filter: 'blur(3.5px)', gradient: 'linear-gradient(to bottom, rgba(228, 13, 13, 0.1), rgb(195, 255, 0))' }}
         />
       </div>
     </>
