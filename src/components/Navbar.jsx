@@ -58,8 +58,8 @@ const Navbar = ({ theme, setTheme, mobileMenuOpen, setMobileMenuOpen }) => {
 
       {/* Mobile Sidebar Navigation */}
       <div
-        className={`fixed top-0 right-0 h-full w-56 dark:bg-black shadow-lg z-50 transform transition-transform duration-300 ease-in-out
-        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-[-500px]'} md:hidden`}
+        className={`fixed top-20 left-0 h-full w-56 dark:bg-black z-50 transform transition-transform duration-300 ease-in-out
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:hidden`}
       >
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Code, Palette, Database, Globe } from 'lucide-react';
-import heroimg from '../assets/hero.png';
+import heroimg from '../assets/pich.png';
 
 const HeroSection = ({ scrollToSection }) => {
   const fadeInLeft = {
@@ -20,18 +20,27 @@ const HeroSection = ({ scrollToSection }) => {
 
         {/* Profile Image */}
         <motion.div
-          className="relative w-full max-w-md mx-auto transform"
-          initial={{ opacity: 0, scale: 0.95 }}
+          className="relative w-full flex justify-center items-end"
+          initial={{ opacity: 0, scale: 1 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-10 blur-xl opacity-40 animate-pulse"></div>
+          <div className="relative flex justify-center items-end w-full">
+            <div className="absolute top-0 inset-10 ml-[30%] bg-gradient-to-r from-blue-100 to-purple-10 blur-xl opacity-40 animate-pulse overflow-hidden"></div>
             <img
               src={heroimg}
               alt="Profile"
-              className="relative w-full max-w-md mx-auto transform z-15"
+              className="w-[full] h-[75vh] ml-[30%] z-10 object-contain transform z-15 "
+
+              style={{
+                maskImage: 'linear-gradient(to bottom, black 65%, transparent 95%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 95%)',
+                maskSize: '100% 100%',
+                WebkitMaskSize: '100% 100%',
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat'
+              }}
             />
           </div>
         </motion.div>
